@@ -1,0 +1,32 @@
+@import url(fontiran.css); 
+
+body {
+	font-family: IRANSansX  !important;
+}
+h1, h2, h3, h4, h5, h6,input, textarea {
+	font-family: IRANSansX !important;
+}
+
+/* Works on Firefox */
+* {
+	scrollbar-width: 5px;
+	scrollbar-color: none #d4d4d4;
+  }
+
+  /* Works on Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+	width: 7px;
+  }
+
+  *::-webkit-scrollbar-track {
+	background: none;
+  }
+
+  *::-webkit-scrollbar-thumb {
+	background-color: #8e8e8e;
+	border-radius: 500px;
+  }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
