@@ -6,9 +6,9 @@
                     <img class="h-10 w-10" src="profile.png" alt="">
                 </div>
                 <div class="mr-4 flex flex-col justify-center items-start">
-                    <div class="text-lg text-gray-900">
+                    <RouterLink :to="{ name: 'forumTopics', params: { forum: 'test' } }" class="text-lg text-gray-900">
                         عنوان فروم
-                    </div>
+                    </RouterLink>
                     <p class="text-[12px] mt-1 text-gray-500">توضیحات مربوط به فروم</p>
                 </div>
             </div>

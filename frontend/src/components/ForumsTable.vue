@@ -13,14 +13,16 @@ import ForumTableItem from '../components/ForumTableItem.vue';
                     تاپیک ها
                 </th>
                 <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    پست ها
+                    پاسخ ها
                 </th>
                 <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    آخرین پست
+                    آخرین پاسخ
                 </th>
             </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
+            <ForumTableItem />
+            <ForumTableItem />
             <ForumTableItem />
             <ForumTableItem />
             <ForumTableItem />

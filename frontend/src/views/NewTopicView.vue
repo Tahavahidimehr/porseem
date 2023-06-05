@@ -1,7 +1,7 @@
 <template>
     <div class="w-full flex flex-col justify-center items-center">
         <div class="w-full flex justify-between items-center border-b border-gray-200 pb-6">
-            <h1 class="text-2xl font-bold">فروم جدید</h1>
+            <h1 class="text-2xl font-bold">تاپیک جدید</h1>
         </div>
         <form @submit.prevent="" class="w-full text-gray-700 flex flex-col border-b border-r border-l border-gray-300 p-7 justify-start items-center">
             <div class="w-full my-2">

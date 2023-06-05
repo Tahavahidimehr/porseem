@@ -3,7 +3,11 @@ import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import ForumsView from '../views/ForumsView.vue'
-import newForumView from '../views/newForumView.vue'
+import NewForumView from '../views/NewForumView.vue'
+import ForumTopicDetailView from '../views/ForumTopicDetailView.vue'
+import ForumTopicsView from '../views/ForumTopicsView.vue'
+import NewTopicView from '../views/NewTopicView.vue'
+import ForumLayout from '../layouts/ForumLayout.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -25,13 +29,34 @@ const router = createRouter({
     },
     {
       path: '/forums',
-      name: 'forums',
-      component: ForumsView
-    },
-    {
-      path: '/forums/new',
-      name: 'newForum',
-      component: newForumView
+      component: ForumLayout,
+      children: [
+        {
+          path: '',
+          name: 'forums',
+          component: ForumsView
+        },
+        {
+          path: 'new',
+          name: 'newForum',
+          component: NewForumView
+        },
+        {
+          path: ':forum/new',
+          name: 'newTopic',
+          component: NewTopicView
+        },
+        {
+          path: ':forum',
+          name: 'forumTopics',
+          component: ForumTopicsView
+        },
+        {
+          path: ':forum/:topic',
+          name: 'forumTopicDetail',
+          component: ForumTopicDetailView
+        },
+      ]
     },
   ]
 })
