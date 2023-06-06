@@ -15,4 +15,9 @@ class Tag extends Model
     {
         return $this->belongsToMany(Topic::class, 'tag_topic');
     }
+
+    public function getRouteKeyName()
+    {
+        return 'tag';
+    }
 }

@@ -1,6 +1,8 @@
 <script setup>
 import TeamBox from './TeamBox.vue';
+import {useDataStore} from "@/stores/DataStore";
 
+const store = useDataStore()
 </script>
 
 <template>
@@ -10,12 +12,7 @@ import TeamBox from './TeamBox.vue';
             </div>
             <div class="h-full w-full px-20">
                 <div class="grid justify-items-center content-center grid-cols-3 grid-rows-2">
-                    <TeamBox />
-                    <TeamBox />
-                    <TeamBox />
-                    <TeamBox />
-                    <TeamBox />
-                    <TeamBox />
+                    <TeamBox v-for="item in store.team" :key="item.id" :item="item"/>
                 </div>
             </div>
         </div>

@@ -41,9 +41,7 @@ onMounted(() => {
             <div class="w-full rounded p-7 leading-7 mt-10 text-gray-600 bg-gray-100">{{ forumStore.topic.description }}</div>
             <div class="w-full border-b border-gray-200 my-5"></div>
             <div class="flex justify-end items-center">
-                <div class="px-2 py-1 rounded text-gray-500 border border-gray-400 mr-2">#لاراول</div>
-                <div class="px-2 py-1 rounded text-gray-500 border border-gray-400 mr-2">#لاراول</div>
-                <div class="px-2 py-1 rounded text-gray-500 border border-gray-400 mr-2">#لاراول</div>
+                <RouterLink :to="{ name: 'topicsOfTag', params: { tag: tag.tag } }" v-for="tag in forumStore.tags" class="px-2 py-1 rounded text-gray-500 border border-gray-400 mr-2">#{{ tag.tag }}</RouterLink>
             </div>
         </div>
 

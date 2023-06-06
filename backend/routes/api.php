@@ -23,6 +23,8 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/forums', [ForumController::class, 'index']);
 Route::get('/forums/{forum}', [ForumController::class, 'getTopics']);
 Route::get('/forums/{forum}/{topic}', [ForumController::class, 'getTopic']);
+Route::get('/tags', [ForumController::class, 'getTags']);
+Route::get('/tags/{tag}/topics', [ForumController::class, 'getTagTopics']);
 
 Route::middleware('auth:sanctum')->group(function (){
     Route::get('/user', function (Request $request) {

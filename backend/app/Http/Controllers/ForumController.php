@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Comment;
 use App\Models\Forum;
+use App\Models\Tag;
 use App\Models\Topic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -30,7 +31,7 @@ class ForumController extends Controller
     public function getTopics(Forum $forum)
     {
         $topics = $forum->with(['topics' => function($query) use ($forum) {
-            return $query->where('forum_id', $forum->id)->with('user');
+            return $query->where('forum_id', $forum->id)->with('user')->with('tags');
         }])->get();
 
         return response()->json([
@@ -43,7 +44,7 @@ class ForumController extends Controller
         return response()->json([
             "topic" => $topic->with(['comments' => function($query) use ($topic) {
                 return $query->where('topic_id', $topic->id)->with('user');
-            }])->with('user')->get()
+            }])->with('user')->with('tags')->get()
         ]);
     }
 
@@ -116,9 +117,28 @@ class ForumController extends Controller
             'comment' => $fields['comment']
         ]);
 
+        $forum->comments_count = $forum->comments_count + 1;
+        $forum->save();
+
         return response()->json([
             "comment" => $comment,
         ], 201);
+    }
+
+    public function getTags()
+    {
+        return response()->json([
+            "tags" => Tag::all(),
+        ]);
+    }
+
+    public function getTagTopics(Tag $tag)
+    {
+        return response()->json([
+            "tag" => $tag,
+            'tagTopics' => $tag->topics()->with('user')->with('forum')->with('tags')->get(),
+
+        ]);
     }
 }
 

@@ -20,7 +20,6 @@ onMounted(() => {
 </script>
 
 <template>
-  <template v-if="store.forums.length >= 1">
     <div class="w-full flex justify-between items-center mb-5">
         <div class="w-10/12 flex justify-center items-center">
             <div class="w-full relative border border-gray-300 rounded">
@@ -32,6 +31,7 @@ onMounted(() => {
         </div>
         <RouterLink :to="{ name: 'newForum' }" class="px-4 py-2 rounded bg-gray-900 text-white">فروم جدید بساز</RouterLink>
     </div>
+  <template v-if="store.forums.length >= 1">
     <ForumsTable />
   </template>
   <template v-else>

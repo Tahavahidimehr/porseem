@@ -21,9 +21,7 @@ defineProps(['topic', 'forumSlug'])
             <RouterLink :to="{ name: 'forumTopicDetail', params: { forum: forumSlug, topic: topic.slug } }" class="mt-10 hover:text-gray-500 transition text-3xl text-gray-800 font-bold mr-3">{{ topic.title }}</RouterLink>
             <div class="w-full rounded p-7 leading-7 h-32 overflow-hidden text-gray-600">{{ topic.description }}</div>
             <div class="flex justify-start items-center">
-                <div class="px-2 py-1 rounded text-gray-500 border border-gray-400 mr-2">#لاراول</div>
-                <div class="px-2 py-1 rounded text-gray-500 border border-gray-400 mr-2">#لاراول</div>
-                <div class="px-2 py-1 rounded text-gray-500 border border-gray-400 mr-2">#لاراول</div>
+                <RouterLink :to="{ name: 'topicsOfTag', params: { tag: tag.tag } }" v-for="tag in topic.tags" class="px-2 py-1 rounded text-gray-500 border border-gray-400 mr-2">#{{ tag.tag }}</RouterLink>
             </div>
         </div>
 </template>

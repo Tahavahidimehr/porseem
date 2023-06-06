@@ -8,6 +8,8 @@ export const useForumStore = defineStore('forumStore', () => {
     const topics = ref([])
     const topic = ref([])
     const tags = ref([])
+    const tag = ref('')
+    const tagTopics = ref([])
     const errors = ref([])
     const error = ref('')
     const loading = ref(false)
@@ -107,6 +109,26 @@ export const useForumStore = defineStore('forumStore', () => {
         loading.value = false
     }
 
+    async function getTags() {
+        loading.value = true
+        await axios.get(`${baseURL}/tags`)
+            .then(res => {
+                tags.value = res.data.tags
+            })
+            .catch((err) => console.log(err))
+        loading.value = false
+    }
 
-    return { loading, forums, topics, topic, errors, error, getForumTopic, getForums, getForumTopics, createForum, createTopic, createComment }
+    async function getTagTopics(data) {
+        loading.value = true
+        await axios.get(`${baseURL}/tags/${data}/topics`)
+            .then(res => {
+                tagTopics.value = res.data.tagTopics
+                tag.value = res.data.tag.tag
+            })
+            .catch((err) => console.log(err))
+        loading.value = false
+    }
+
+    return { loading, forums, topics, topic, errors, error, tags, tag, tagTopics, getForumTopic, getForums, getForumTopics, createForum, createTopic, createComment, getTags, getTagTopics }
 })

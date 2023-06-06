@@ -7,6 +7,7 @@ import NewForumView from '../views/NewForumView.vue'
 import ForumTopicDetailView from '../views/ForumTopicDetailView.vue'
 import ForumTopicsView from '../views/ForumTopicsView.vue'
 import NewTopicView from '../views/NewTopicView.vue'
+import TopicsOfTagView from '../views/TopicsOfTagView.vue'
 import ForumLayout from '../layouts/ForumLayout.vue'
 
 const router = createRouter({
@@ -20,12 +21,33 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: LoginView
+      component: LoginView,
+      beforeEnter: (to, from, next) => {
+        if (localStorage.getItem('token')) {
+          next({ name: 'home' })
+        }
+        else {
+          next()
+        }
+      }
     },
     {
       path: '/register',
       name: 'register',
-      component: RegisterView
+      component: RegisterView,
+      beforeEnter: (to, from, next) => {
+        if (localStorage.getItem('token')) {
+          next({ name: 'home' })
+        }
+        else {
+          next()
+        }
+      }
+    },
+    {
+      path: '/tags/:tag/topics',
+      name: 'topicsOfTag',
+      component: TopicsOfTagView
     },
     {
       path: '/forums',
