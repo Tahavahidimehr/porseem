@@ -1,6 +1,6 @@
 <script setup>
 import ReplyIcon from '../components/icons/ReplyIcon.vue'
-import {onMounted} from "vue";
+import {onMounted, ref} from "vue";
 import {useForumStore} from "@/stores/ForumStore";
 import {useRoute} from "vue-router";
 import {useAuthStore} from "@/stores/AuthStore";
@@ -8,7 +8,14 @@ import {useAuthStore} from "@/stores/AuthStore";
 const forumStore = useForumStore()
 const authStore = useAuthStore()
 
+let comment = ref('')
+
 const route = useRoute()
+
+const formSubmitHandler = () => {
+  forumStore.createComment({ comment: comment.value, forumSlug: route.params.forum, topicSlug: route.params.topic })
+  comment.value = ''
+}
 
 onMounted(() => {
   forumStore.getForumTopic(route.params.forum, route.params.topic)
@@ -53,19 +60,25 @@ onMounted(() => {
           <div class="w-full rounded min-h-[12rem] p-7 leading-7 mt-5 text-gray-600 bg-gray-50">{{ comment.comment }}</div>
         </div>
 
-        <div class="w-full mt-5 rounded min-h-[20rem] border border-gray-300 p-5">
+        <template v-if="authStore.isLoggedIn">
+          <form @submit.prevent="formSubmitHandler" class="w-full mt-5 rounded min-h-[20rem] border border-gray-300 p-5">
             <div class="w-full flex justify-between items-center">
-                <div class="flex justify-between items-center">
-                    <div class="w-14 h-14 rounded-full"><img src="/profile.png" class="rounded-full" alt=""></div>
-                    <h1 class="text-lg text-gray-800 mr-3">{{ authStore.user &&authStore.user.name }}</h1>
-                </div>
+              <div class="flex justify-between items-center">
+                <div class="w-14 h-14 rounded-full"><img src="/profile.png" class="rounded-full" alt=""></div>
+                <h1 class="text-lg text-gray-800 mr-3">{{ authStore.userData.value && authStore.userData.value.name }}</h1>
+              </div>
             </div>
-            <textarea class="w-full focus:outline-none rounded min-h-[12rem] p-7 leading-7 mt-5 text-gray-600 border border-gray-300"></textarea>
+            <textarea v-model="comment" :class="{'border border-red-500': forumStore.errors && forumStore.errors.comment}" class="w-full focus:outline-none rounded min-h-[12rem] p-7 leading-7 mt-5 text-gray-600 border border-gray-300"></textarea>
+            <span v-if="forumStore.errors.comment" class="text-red-500 text-sm mt-2">{{ forumStore.errors.comment && forumStore.errors.comment[0] }}</span>
             <div class="w-full flex justify-end my-3">
-                <button type="submit" class="w-40 p-2 rounded bg-gray-800 text-white flex justify-center items-center transition hover:bg-gray-700 focus:outline-none">
-                    ثبت پاسخ
-                </button>
+              <button type="submit" class="w-40 p-2 rounded bg-gray-800 text-white flex justify-center items-center transition hover:bg-gray-700 focus:outline-none">
+                ثبت پاسخ
+              </button>
             </div>
-        </div>
+          </form>
+        </template>
+      <template v-else>
+        <RouterLink :to="{ name: 'login' }" class="w-full h-20 flex justify-start items-center px-10 mt-5 rounded shadow-md">برای ثبت پاسخ لطفا ابتدا وارد شوید.</RouterLink>
+      </template>
     </div>
 </template>

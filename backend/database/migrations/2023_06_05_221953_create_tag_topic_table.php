@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('tag_topic', function (Blueprint $table) {
             $table->unsignedBigInteger('tag_id');
             $table->foreign('tag_id')->references('id')->on('tags')->onDelete('cascade');
-            $table->unsignedBigInteger('tag_id');
-            $table->foreign('tag_id')->references('id')->on('tags')->onDelete('cascade');
-            $table->primary(['forum_id', 'tag_id']);
+            $table->unsignedBigInteger('topic_id');
+            $table->foreign('topic_id')->references('id')->on('topics')->onDelete('cascade');
+            $table->primary(['tag_id', 'topic_id']);
         });
     }
 

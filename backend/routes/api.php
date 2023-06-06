@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ForumController;
+use App\Models\Forum;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +30,8 @@ Route::middleware('auth:sanctum')->group(function (){
     });
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/forums/new', [ForumController::class, 'createForum']);
+    Route::post('/forums/{forum}/new', [ForumController::class, 'createTopic']);
+    Route::post('/forums/{forum}/{topic}/comment', [ForumController::class, 'createComment']);
 });
 
 

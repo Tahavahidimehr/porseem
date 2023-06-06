@@ -1,4 +1,4 @@
-import {reactive, ref} from 'vue'
+import {ref} from 'vue'
 import { defineStore } from 'pinia'
 import axios from "axios";
 import { useRouter } from "vue-router";
@@ -16,9 +16,16 @@ export const useForumStore = defineStore('forumStore', () => {
 
     const baseURL = 'http://localhost:8000/api'
 
-    async function getForums() {
+    async function getForums(search) {
         loading.value = true
-        await axios.get(`${baseURL}/forums`)
+        let url = ''
+        if (search) {
+            url = `${baseURL}/forums?search=${search}`
+        }
+        else {
+            url = `${baseURL}/forums`
+        }
+        await axios.get(url)
             .then(res => {
                 forums.value = res.data.forums
             })
@@ -30,7 +37,7 @@ export const useForumStore = defineStore('forumStore', () => {
         loading.value = true
         await axios.get(`${baseURL}/forums/${forumSlug}`)
             .then(res => {
-                topics.value = res.data.topics[0].topics
+                topics.value = res.data.topics[res.data.topics.findIndex((item) => item.slug === forumSlug)].topics
             })
             .catch((err) => console.log(err))
         loading.value = false
@@ -40,7 +47,7 @@ export const useForumStore = defineStore('forumStore', () => {
         loading.value = true
         await axios.get(`${baseURL}/forums/${forumSlug}/${topicSlug}`)
             .then(res => {
-                topic.value = res.data.topic
+                topic.value = res.data.topic[res.data.topic.findIndex(item => item.slug === topicSlug)]
             })
             .catch((err) => console.log(err))
         loading.value = false
@@ -50,7 +57,43 @@ export const useForumStore = defineStore('forumStore', () => {
         loading.value = true
         await axios.post(`${baseURL}/forums/new`, data, { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } })
             .then(res => {
-                console.log(res.data)
+                router.push({ name: 'forums' })
+            })
+            .catch(err => {
+                console.log(err)
+                if (err.response.data.errors) {
+                    errors.value = err.response.data.errors
+                }
+                else {
+                    error.value = err.response.data.message
+                }
+            })
+        loading.value = false
+    }
+
+    async function createTopic(data) {
+        loading.value = true
+        await axios.post(`${baseURL}/forums/${data.forumSlug}/new`, data, { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } })
+            .then(res => {
+                router.push({ name: 'forumTopics', params: { forum: data.forumSlug } })
+            })
+            .catch(err => {
+                console.log(err)
+                if (err.response.data.errors) {
+                    errors.value = err.response.data.errors
+                }
+                else {
+                    error.value = err.response.data.message
+                }
+            })
+        loading.value = false
+    }
+
+    async function createComment(data) {
+        loading.value = true
+        await axios.post(`${baseURL}/forums/${data.forumSlug}/${data.topicSlug}/comment`, data, { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } })
+            .then(res => {
+                // router.push({ name: 'forumTopicDetail', params: { forum: data.forumSlug, topic: data.topicSlug } })
             })
             .catch(err => {
                 console.log(err)
@@ -65,5 +108,5 @@ export const useForumStore = defineStore('forumStore', () => {
     }
 
 
-    return { loading, forums, topics, topic, errors, error, getForumTopic, getForums, getForumTopics, createForum }
+    return { loading, forums, topics, topic, errors, error, getForumTopic, getForums, getForumTopics, createForum, createTopic, createComment }
 })
