@@ -50,7 +50,17 @@ class User extends Authenticatable
 
     public function forums()
     {
-        return $this->belongsToMany(Forum::class, 'forum_user');
+        return $this->hasMany(Forum::class);
+    }
+
+    public function topics()
+    {
+        return $this->hasMany(Topic::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
     }
 
     public function hasRole($roleName)

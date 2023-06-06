@@ -2,73 +2,60 @@
 
 namespace App\Http\Controllers;
 
-use App\Classes\helpers;
 use App\Models\Forum;
+use App\Models\Topic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 
 class ForumController extends Controller
 {
-    const BUSINESS_ROLE_NAME = "business";
-
-    // list of forums
     public function index()
     {
-        $user = Auth::user();
-
         return response()->json([
-            "forums" => $user->forums()->get()
+            "forums" => Forum::all()
         ]);
     }
 
-    // Store forum
-    public function store(Request $request)
+    public function getTopics(Forum $forum)
     {
-        $user = Auth::user();
-        if ($user->hasRole(self::BUSINESS_ROLE_NAME)){
-            $newFilename = "";
-            if ($request->hasFile('background')) {
-
-                $file = $request->file('background');
-                if ($file->isValid()) {
-
-                    // Filename is hashed filename + part of timestamp
-                    $hashedName = hash_file('md5', $file->path());
-                    $timestamp = microtime() * 1000000;
-
-                    $newFilename = $hashedName . $timestamp . '.' . $file->getClientOriginalExtension();
-
-                    Storage::disk('local')->put($newFilename, file_get_contents($file));
-                }
-            }
-
-
-            $forum = Forum::create([
-                "id" => $request->id ,
-                "title" => $request->title ,
-                "description" => $request->description ,
-                "is_public" => $request->is_public ,
-                "background" => $newFilename
-            ]);
-            $user->forums()->attach($forum->id);
-
-            return helpers::preparedJsonResponseWithMessage(true, "فروم ایجاد شد.", ["forum" => $forum]);
-        }
-
-        return helpers::preparedJsonResponseWithMessage(false, "شما دسترسی ایجاد فروم را ندارید.");
+        return response()->json([
+            "topics" => $forum->with(['topics' => function($query) use ($forum) {
+                return $query->where('forum_id', $forum->id)->with('user');
+            }])->get()
+        ]);
     }
 
-    // Get whole forum with questions for the Single Forum page
-    public function getForum(Request $request)
+    public function getTopic(Forum $forum, Topic $topic)
     {
-        $forum_id = $request->id;
-        $forum = Forum::where('id', $forum_id)->first();
+        return response()->json([
+            "topic" => $topic->with(['comments' => function($query) use ($topic) {
+                return $query->where('topic_id', $topic->id)->with('user');
+            }])->first()
+        ]);
+    }
+
+    public function createForum(Request $request)
+    {
+        $fields = $request->validate([
+            'title' => 'required|string',
+            'description' => 'required',
+        ],
+        [
+            'title.required' => 'عنوان الزامی است',
+            'description.required' => 'توضیحات الزامی است',
+        ]);
+
+        $forum = Forum::create([
+            'user_id' => auth()->id(),
+            'title' => $fields['title'],
+            'slug' => str_replace(' ', '_', $fields['title']),
+            'description' => $fields['description']
+        ]);
 
         return response()->json([
-            "users_count" => $forum->users()->count(),
-            "questions_count" => $forum->contents()->count(),
-            "questions" => $forum->contents()->where('parent_id', 0)->get(),
-        ]);
+            "forum" => $forum,
+        ], 201);
+
     }
 }
+

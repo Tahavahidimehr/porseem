@@ -39,17 +39,33 @@ const router = createRouter({
         {
           path: 'new',
           name: 'newForum',
-          component: NewForumView
+          component: NewForumView,
+          beforeEnter: (to, from, next) => {
+            if (!localStorage.getItem('token')) {
+              next({ name: 'login' })
+            }
+            else {
+              next()
+            }
+          },
         },
         {
           path: ':forum/new',
           name: 'newTopic',
-          component: NewTopicView
+          component: NewTopicView,
+          beforeEnter: (to, from, next) => {
+            if (!localStorage.getItem('token')) {
+              next({ name: 'login' })
+            }
+            else {
+              next()
+            }
+          }
         },
         {
           path: ':forum',
           name: 'forumTopics',
-          component: ForumTopicsView
+          component: ForumTopicsView,
         },
         {
           path: ':forum/:topic',

@@ -1,5 +1,16 @@
 <script setup>
 import ForumTopicsItem from '../components/ForumTopicsItem.vue';
+import {useForumStore} from "@/stores/ForumStore";
+import {onMounted} from "vue";
+import {useRoute} from "vue-router";
+
+const store = useForumStore()
+
+const route = useRoute()
+
+onMounted(() => {
+  store.getForumTopics(route.params.forum)
+})
 </script>
 
 <template>
@@ -8,8 +19,6 @@ import ForumTopicsItem from '../components/ForumTopicsItem.vue';
             <h1 class="text-2xl font-bold">تاپیک ها</h1>
             <RouterLink :to="{ name: 'newTopic' }" class="px-4 py-2 rounded bg-gray-900 text-white">تاپیک جدید بساز</RouterLink>
         </div>
-        <ForumTopicsItem />
-        <ForumTopicsItem />
-        <ForumTopicsItem />
+        <ForumTopicsItem v-for="topic in store.topics" :key="topic.id" :forumSlug="route.params.forum" :topic="topic"/>
     </div>
 </template>

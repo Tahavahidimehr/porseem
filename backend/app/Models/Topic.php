@@ -5,30 +5,31 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Forum extends Model
+class Topic extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'user_id',
-        'slug',
+        'forum_id',
         'title',
         'description'
     ];
-
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-
-    public function topics()
+    public function forum()
     {
-        return $this->hasMany(Topic::class);
+        return $this->belongsTo(Forum::class);
     }
-
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
     public function tags()
     {
-        return $this->belongsToMany(Tag::class, 'forum_tag');
+        return $this->belongsToMany(Tag::class, 'tag_topic');
     }
 
     public function getRouteKeyName()

@@ -1,5 +1,13 @@
 <script setup>
 import ForumTableItem from '../components/ForumTableItem.vue';
+import {useForumStore} from "@/stores/ForumStore";
+import {onMounted} from "vue";
+
+const store = useForumStore()
+
+onMounted(() => {
+  store.getForums()
+})
 </script>
 
 <template>
@@ -21,12 +29,7 @@ import ForumTableItem from '../components/ForumTableItem.vue';
             </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
-            <ForumTableItem />
-            <ForumTableItem />
-            <ForumTableItem />
-            <ForumTableItem />
-            <ForumTableItem />
-            <ForumTableItem />
+            <ForumTableItem v-for="forum in store.forums" :key="forum.id" :forum="forum"/>
         </tbody>
     </table>
 </template>
